@@ -44,12 +44,14 @@ sha_for() {
 }
 
 update_cert_if_changed 'https://raw.github.com/AltCA/roots/master/root.pem' add-trusted-cert
+rootSha="$newSha"
+update_cert_if_changed 'https://raw.github.com/AltCA/roots/master/codesign.pem'
+update_cert_if_changed 'https://raw.github.com/AltCA/roots/master/package.pem'
+
 echo "Removing old AltCA.org certificates from Gatekeeper"
 sudo spctl --remove --label "AltCA.org root" \
     || echo "(Failed, this is probably the first run.)"
 echo "Adding certificate \"$commonName\" to Gatekeeper"
-sudo spctl --add --label "AltCA.org root" --anchor "$newSha"
+sudo spctl --add --label "AltCA.org root" --anchor "$rootSha"
 
-update_cert_if_changed 'https://raw.github.com/AltCA/roots/master/codesign.pem' add-certificates
-update_cert_if_changed 'https://raw.github.com/AltCA/roots/master/package.pem' add-certificates
 
