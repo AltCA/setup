@@ -16,11 +16,19 @@ update_cert_if_changed() {
     added=false
     replaced=false
     if [ "$oldSha" != "$newSha" ] ; then
-	security $command $pem
+	der=${pem}.der
+	openssl x509 -in $pem -outform der -out $der
+	security add-certificates $der
+	if [ "$command" = "add-trusted-cert" ] ; then
+	    security add-trusted-cert $der
+	fi
+
 	added=true
 	if [ "$oldSha" ] ; then
-	    rmcommand=`echo "$command" | sed -e 's/add-/remove-/'`
-	    security $rmcommand "$oldSha"
+	    if [ "$command" = "add-trusted-cert" ] ; then
+		security remove-trusted-cert "$oldSha"
+	    fi
+	    security remove-certificates "$oldSha"
 	    replaced=true
 	fi
     fi
