@@ -47,6 +47,7 @@ sha_for() {
 somethingchanged=false
 update_cert_if_changed 'https://raw.github.com/AltCA/roots/master/root.pem' add-trusted-cert
 rootSha="$newSha"
+rootName="$commonName"
 update_cert_if_changed 'https://raw.github.com/AltCA/roots/master/codesign.pem'
 update_cert_if_changed 'https://raw.github.com/AltCA/roots/master/package.pem'
 
@@ -54,7 +55,7 @@ if $somethingchanged ; then
     echo "Removing old AltCA.org certificates from Gatekeeper"
     sudo spctl --remove --label "AltCA.org root" \
 	|| echo "(Failed, this is probably the first run.)"
-    echo "Adding certificate \"$commonName\" to Gatekeeper"
+    echo "Adding certificate \"$rootName\" to Gatekeeper"
     sudo spctl --add --label "AltCA.org root" --anchor "$rootSha"
 else
     echo "No certificates added or changed, not changing security policy database."
