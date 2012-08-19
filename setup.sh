@@ -41,7 +41,7 @@ update_cert_if_changed() {
 }
 
 sha_for() {
-    security find-certificate -Zc "$1"|grep ^SHA-1|awk '{print $3}'
+    security find-certificate -Zc "$1" 2>/dev/null |grep ^SHA-1|awk '{print $3}'
 }
 
 somethingchanged=false
