@@ -29,7 +29,7 @@ update_cert_if_changed() {
 	    if [ "$command" = "add-trusted-cert" ] ; then
 		security remove-trusted-cert "$oldSha"
 	    fi
-	    security remove-certificates "$oldSha"
+	    security delete-certificate -Z "$oldSha"
 	    replaced=true
 	fi
     fi
