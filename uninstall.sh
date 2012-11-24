@@ -20,4 +20,11 @@ security delete-certificate -Z "$pkgcertsha"
 security delete-certificate -Z "$codecertsha"
 security delete-certificate -Z "$rootsha"
 
+altcapkg=`pkgutil --pkgs=org.altca.installer`
+if [ "$altcapkg" ] ; then
+    echo "Detected AltCA.org installer package, uninstalling package."
+    rm -rf /opt/AltCa
+    pkgutil --forget $altcapkg
+fi
+
 echo "All done."
